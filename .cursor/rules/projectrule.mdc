@@ -1,0 +1,33 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+## Teknoloji Yığını ve Mimari
+
+- **Next.js**: App Router yapısını kullanın.
+- **Tailwind 4** Projede tailwind 4 yüklü olduğu için tailwind işlemleri buna göre yapılmalı.
+- **TypeScript**: Tüm projede tip güvenliği sağlayın.
+- **Supabase**: PostgreSQL veritabanı olarak kullanın.
+- **Drizzle ORM**: Tip güvenli sorgular için tercih edin.
+
+## UI Bileşenleri
+
+- **React Bits**, **Aceternity UI**, **Hero UI**, **Shadcn** gibi modern bileşen kütüphanelerini kullanarak şık ve yaratıcı tasarımlar oluşturun.
+
+## Performans ve SEO
+
+- Sunucu tarafı render (SSR) ve statik site üretimi (SSG) en iyi uygulamalarını uygulayın.
+- Metadata, Open Graph ve JSON-LD gibi yapılandırılmış verilerle SEO optimizasyonu sağlayın.
+
+## Paket Yönetimi
+
+- Mevcut `package.json` dosyasındaki bağımlılıkları kontrol edin.
+- Gereksiz paketleri kaldırın ve yeni paket eklemeden önce ihtiyaç analizini yapın.
+
+## Kod İncelemesi ve Sürüm Kontrolü
+
+- Güncellemelerden önce mevcut kodu inceleyin.
+- Kod değişikliklerinin önceki işlevselliği bozmadığından emin olun.
+- Kod inceleme (code review) süreçlerini uygulayın.
+
