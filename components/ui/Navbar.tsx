@@ -148,7 +148,7 @@ export default function Navbar() {
 
                         {/* Menü içeriği */}
                         <motion.div
-                            className="fixed right-0 top-0 h-full w-[80%] max-w-sm bg-card z-50 glassmorphism border-l border-border shadow-xl flex flex-col"
+                            className="fixed right-0 top-0 h-full w-[80%] max-w-sm bg-card z-[1000] glassmorphism border-l border-border shadow-xl flex flex-col"
                             initial={{ x: '100%' }}
                             animate={{ x: 0 }}
                             exit={{ x: '100%' }}

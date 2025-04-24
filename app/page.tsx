@@ -8,7 +8,7 @@ import ContactSection from '../components/sections/ContactSection';
 
 export default function Home() {
     return (
-        <main className="flex flex-col min-h-screen">
+        <main className="flex flex-col min-h-screen max-lg:pt-4">
             <HeroSection />
             <FeaturedProjects />
             <AboutSection />
