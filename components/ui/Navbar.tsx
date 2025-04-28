@@ -1,205 +1,246 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { motion, AnimatePresence } from 'framer-motion';
-import { HiMenu } from 'react-icons/hi';
-import { IoClose } from 'react-icons/io5';
-import dynamic from 'next/dynamic';
+import { motion, useScroll, useTransform } from 'framer-motion';
 
-// Navigasyon linkleri
-const navLinks = [
-    { href: '/', label: 'Ana Sayfa' },
-    { href: '/projeler', label: 'Projeler' },
-    { href: '/iletisim', label: 'İletişim' },
-];
-
-export default function Navbar() {
-    const [isOpen, setIsOpen] = useState(false);
-    const [isScrolled, setIsScrolled] = useState(false);
+const Navbar = () => {
+    const [menuOpen, setMenuOpen] = useState(false);
     const pathname = usePathname();
 
-    // Sayfa kaydırıldığında navbar'ın görünümünü değiştir
-    useEffect(() => {
-        const handleScroll = () => {
-            if (window.scrollY > 10) {
-                setIsScrolled(true);
-            } else {
-                setIsScrolled(false);
-            }
-        };
+    const { scrollYProgress } = useScroll();
+    const navBackground = useTransform(
+        scrollYProgress,
+        [0, 0.05],
+        ['rgba(12, 12, 12, 0)', 'rgba(12, 12, 12, 0.8)']
+    );
 
-        window.addEventListener('scroll', handleScroll);
-        return () => window.removeEventListener('scroll', handleScroll);
-    }, []);
+    const navLinks = [
+        {
+            label: 'Ana Sayfa',
+            href: '/',
+        },
+        {
+            label: 'Projeler',
+            href: '/projeler',
+        },
+        {
+            label: 'İletişim',
+            href: '/iletisim',
+        },
+    ];
 
-    // Menü açıldığında body'nin scroll'unu engelle
+    // İletişim sayfasındaki görsel
+    const menuImage = '/images/woman-art-2.svg';
+
     useEffect(() => {
-        if (isOpen) {
+        if (menuOpen) {
             document.body.style.overflow = 'hidden';
         } else {
-            document.body.style.overflow = 'auto';
+            document.body.style.overflow = 'unset';
         }
-
         return () => {
-            document.body.style.overflow = 'auto';
+            document.body.style.overflow = 'unset';
         };
-    }, [isOpen]);
+    }, [menuOpen]);
+
+    // Sayfa değiştiğinde menüyü kapatmak için
+    useEffect(() => {
+        setMenuOpen(false);
+    }, [pathname]);
 
     return (
         <>
-            {/* Standart Header */}
-            <header
-                className={`fixed top-0 left-0 right-0 z-[999] transition-all duration-300 ${
-                    isScrolled
-                        ? 'py-3 bg-background/95 backdrop-blur-md shadow-lg'
-                        : 'py-5 bg-background/80 backdrop-blur-sm'
-                }`}
+            <motion.header
+                className="fixed top-0 left-0 w-full z-50 px-6 py-4 mix-blend-difference"
+                style={{ backgroundColor: navBackground }}
             >
-                <div className="container px-4 mx-auto">
-                    <div className="flex items-center justify-between">
-                        {/* Logo */}
-                        <motion.div
+                <div className="flex items-center justify-between">
+                    <Link href="/" className="text-2xl font-bold">
+                        <motion.span
+                            className="block text-gradient-rainbow"
                             initial={{ opacity: 0, x: -20 }}
                             animate={{ opacity: 1, x: 0 }}
-                            transition={{ duration: 0.5 }}
+                            transition={{ duration: 0.6, ease: [0.43, 0.13, 0.23, 0.96] }}
                         >
-                            <Link href="/" className="text-2xl font-bold text-gradient">
-                                BETÜL ÇEÇEN
-                            </Link>
-                        </motion.div>
+                            BETÜL ÇEÇEN
+                        </motion.span>
+                    </Link>
 
-                        {/* Desktop Navigation */}
-                        <nav className="hidden md:flex items-center space-x-10">
-                            {navLinks.map((link, index) => (
-                                <motion.div
-                                    key={link.href}
-                                    initial={{ opacity: 0, y: -10 }}
-                                    animate={{ opacity: 1, y: 0 }}
-                                    transition={{ duration: 0.3, delay: index * 0.1 }}
-                                >
-                                    <Link
-                                        href={link.href}
-                                        className={`relative text-sm font-medium hover:text-primary transition-colors ${
-                                            pathname === link.href
-                                                ? 'text-primary'
-                                                : 'text-muted-foreground'
-                                        }`}
-                                    >
-                                        {link.label}
-                                        {pathname === link.href && (
-                                            <motion.div
-                                                className="absolute -bottom-1 left-0 right-0 h-0.5 bg-primary"
-                                                layoutId="navbar-indicator"
-                                                transition={{
-                                                    type: 'spring',
-                                                    stiffness: 300,
-                                                    damping: 30,
-                                                }}
-                                            />
-                                        )}
-                                    </Link>
-                                </motion.div>
-                            ))}
-                        </nav>
-
-                        {/* Call to action button */}
-                        <motion.div
-                            className="hidden md:block"
-                            initial={{ opacity: 0, scale: 0.9 }}
-                            animate={{ opacity: 1, scale: 1 }}
-                            transition={{ duration: 0.5, delay: 0.3 }}
+                    <div className="flex items-center">
+                        <button
+                            onClick={() => setMenuOpen(!menuOpen)}
+                            className="relative z-50 flex flex-col items-center justify-center w-10 h-10"
+                            aria-label={menuOpen ? 'Menüyü kapat' : 'Menüyü aç'}
                         >
-                            <Link
-                                href="/iletisim"
-                                className="px-5 py-2 rounded-full bg-primary text-primary-foreground font-medium hover:bg-primary/90 transition-colors"
-                            >
-                                İletişime Geç
-                            </Link>
-                        </motion.div>
-
-                        {/* Mobile Menu Button */}
-                        <motion.button
-                            className="md:hidden w-10 h-10 flex items-center justify-center rounded-full hover:bg-muted transition-colors"
-                            onClick={() => setIsOpen(true)}
-                            whileTap={{ scale: 0.9 }}
-                            aria-label="Menüyü aç"
-                        >
-                            <HiMenu className="w-6 h-6" />
-                        </motion.button>
+                            <motion.span
+                                className="block w-6 h-0.5 bg-white mb-1.5"
+                                animate={{
+                                    rotate: menuOpen ? 45 : 0,
+                                    y: menuOpen ? 6 : 0,
+                                }}
+                                transition={{ duration: 0.2 }}
+                            />
+                            <motion.span
+                                className="block w-6 h-0.5 bg-white"
+                                animate={{
+                                    opacity: menuOpen ? 0 : 1,
+                                    x: menuOpen ? -10 : 0,
+                                }}
+                                transition={{ duration: 0.2 }}
+                            />
+                            <motion.span
+                                className="block w-6 h-0.5 bg-white mt-1.5"
+                                animate={{
+                                    rotate: menuOpen ? -45 : 0,
+                                    y: menuOpen ? -6 : 0,
+                                }}
+                                transition={{ duration: 0.2 }}
+                            />
+                        </button>
                     </div>
                 </div>
-            </header>
+            </motion.header>
 
-            {/* Yeni Mobil Menü - Animasyonlu */}
-            <AnimatePresence>
-                {isOpen && (
-                    <>
-                        {/* Arkaplan overlay */}
-                        <motion.div
-                            className="fixed inset-0 bg-background/80 backdrop-blur-md z-40"
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            exit={{ opacity: 0 }}
-                            transition={{ duration: 0.3 }}
-                            onClick={() => setIsOpen(false)}
-                        />
+            <motion.div
+                className="fixed inset-0 z-40 flex items-center justify-center"
+                initial={{ opacity: 0, visibility: 'hidden' }}
+                animate={{
+                    opacity: menuOpen ? 1 : 0,
+                    visibility: menuOpen ? 'visible' : 'hidden',
+                }}
+                transition={{ duration: 0.5, ease: [0.23, 1, 0.32, 1] }}
+            >
+                <div className="absolute inset-0 bg-background opacity-95" />
 
-                        {/* Menü içeriği */}
-                        <motion.div
-                            className="fixed right-0 top-0 h-full w-[80%] max-w-sm bg-card z-[1000] glassmorphism border-l border-border shadow-xl flex flex-col"
-                            initial={{ x: '100%' }}
-                            animate={{ x: 0 }}
-                            exit={{ x: '100%' }}
-                            transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-                        >
-                            <div className="flex justify-between items-center p-6 border-b border-border">
-                                <h2 className="text-xl font-bold text-gradient">MENÜ</h2>
-                                <motion.button
-                                    className="w-9 h-9 flex items-center justify-center rounded-full bg-muted hover:bg-muted/80 transition-colors"
-                                    onClick={() => setIsOpen(false)}
-                                    whileTap={{ scale: 0.9 }}
-                                    aria-label="Menüyü kapat"
-                                >
-                                    <IoClose className="w-5 h-5" />
-                                </motion.button>
+                <motion.div
+                    className="relative z-10 flex flex-col items-center justify-center w-full h-full"
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{
+                        opacity: menuOpen ? 1 : 0,
+                        y: menuOpen ? 0 : 20,
+                    }}
+                    transition={{
+                        duration: 0.8,
+                        ease: [0.23, 1, 0.32, 1],
+                        staggerChildren: 0.1,
+                        delayChildren: 0.2,
+                    }}
+                >
+                    <div className="w-full max-w-3xl px-6">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                            <div className="flex flex-col items-start justify-center">
+                                {navLinks.map((link, index) => (
+                                    <motion.div
+                                        key={link.href}
+                                        className="w-full py-4 border-b border-border"
+                                        initial={{ opacity: 0, y: 20 }}
+                                        animate={{
+                                            opacity: menuOpen ? 1 : 0,
+                                            y: menuOpen ? 0 : 20,
+                                        }}
+                                        transition={{
+                                            duration: 0.6,
+                                            ease: [0.23, 1, 0.32, 1],
+                                            delay: 0.1 * index,
+                                        }}
+                                    >
+                                        <Link href={link.href} className="group">
+                                            <div className="text-4xl md:text-6xl font-bold transition-all duration-500 relative overflow-hidden">
+                                                <span
+                                                    className={`block group-hover:translate-y-[-100%] transition-transform duration-500 ${
+                                                        pathname === link.href
+                                                            ? 'text-primary'
+                                                            : 'text-foreground'
+                                                    }`}
+                                                >
+                                                    {link.label}
+                                                </span>
+                                                <span className="absolute top-full left-0 block group-hover:translate-y-[-100%] transition-transform duration-500 text-primary">
+                                                    {link.label}
+                                                </span>
+                                            </div>
+                                        </Link>
+                                    </motion.div>
+                                ))}
                             </div>
 
-                            <div className="flex-grow overflow-y-auto py-6 px-6">
-                                <nav className="flex flex-col space-y-2">
-                                    {navLinks.map((link, index) => (
-                                        <motion.div
-                                            key={link.href}
-                                            initial={{ opacity: 0, x: 20 }}
-                                            animate={{ opacity: 1, x: 0 }}
-                                            transition={{ delay: index * 0.1 }}
-                                        >
-                                            <Link
-                                                href={link.href}
-                                                onClick={() => setIsOpen(false)}
-                                                className={`relative block py-3 px-4 rounded-lg text-lg font-medium transition-colors ${
-                                                    pathname === link.href
-                                                        ? 'bg-primary/10 text-primary'
-                                                        : 'hover:bg-muted text-foreground'
-                                                }`}
-                                            >
-                                                {link.label}
-                                                {pathname === link.href && (
-                                                    <motion.div
-                                                        className="absolute left-0 top-0 bottom-0 w-1 bg-primary rounded-full"
-                                                        layoutId="mobile-nav-indicator"
-                                                    />
-                                                )}
-                                            </Link>
-                                        </motion.div>
-                                    ))}
-                                </nav>
+                            <div className="hidden md:flex flex-col items-start justify-center">
+                                <motion.div
+                                    className="overflow-hidden rounded-xl w-full h-[300px] relative"
+                                    initial={{ opacity: 0, y: 30 }}
+                                    animate={{
+                                        opacity: menuOpen ? 1 : 0,
+                                        y: menuOpen ? 0 : 30,
+                                    }}
+                                    transition={{
+                                        duration: 0.8,
+                                        ease: [0.23, 1, 0.32, 1],
+                                        delay: 0.4,
+                                    }}
+                                >
+                                    {/* Her sayfa için tek bir görsel kullandık - İletişim sayfasındaki görsel */}
+                                    <motion.div
+                                        className="absolute inset-0 w-full h-full"
+                                        initial={{ opacity: 0 }}
+                                        animate={{ opacity: 1 }}
+                                        transition={{ duration: 0.5 }}
+                                    >
+                                        <img
+                                            src={menuImage}
+                                            alt="Menü görseli"
+                                            className="w-full h-full object-contain"
+                                        />
+                                    </motion.div>
+                                </motion.div>
+                            </div>
+                        </div>
+
+                        <motion.div
+                            className="mt-12 pt-8 border-t border-border flex flex-col md:flex-row items-start md:items-center justify-between text-muted-foreground"
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{
+                                opacity: menuOpen ? 1 : 0,
+                                y: menuOpen ? 0 : 20,
+                            }}
+                            transition={{ duration: 0.8, ease: [0.23, 1, 0.32, 1], delay: 0.5 }}
+                        >
+                            <div className="mb-4 md:mb-0">
+                                <p>hello@betulcecen.com</p>
+                            </div>
+                            <div className="flex items-center gap-4">
+                                <a
+                                    href="https://instagram.com"
+                                    target="_blank"
+                                    rel="noreferrer"
+                                    className="hover:text-primary transition-colors"
+                                >
+                                    Instagram
+                                </a>
+                                <a
+                                    href="https://behance.net"
+                                    target="_blank"
+                                    rel="noreferrer"
+                                    className="hover:text-primary transition-colors"
+                                >
+                                    Behance
+                                </a>
+                                <a
+                                    href="https://dribbble.com"
+                                    target="_blank"
+                                    rel="noreferrer"
+                                    className="hover:text-primary transition-colors"
+                                >
+                                    Dribbble
+                                </a>
                             </div>
                         </motion.div>
-                    </>
-                )}
-            </AnimatePresence>
+                    </div>
+                </motion.div>
+            </motion.div>
         </>
     );
-}
+};
+
+export default Navbar;

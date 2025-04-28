@@ -1,303 +1,354 @@
-"use client";
+'use client';
 
-import React, { useState } from 'react';
+import { useRef, useState } from 'react';
 import { motion } from 'framer-motion';
-import { FaInstagram, FaBehance, FaLinkedinIn } from 'react-icons/fa';
 
-export default function ContactSection() {
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    message: ''
-  });
-  
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
-  
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
-  };
-  
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-    
-    try {
-      // Burada API çağrısı yapılacak
-      await new Promise(resolve => setTimeout(resolve, 1000)); // Simüle edilmiş API çağrısı
-      setSubmitStatus('success');
-    } catch (error) {
-      setSubmitStatus('error');
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
-  
-  // Animasyon için varyantlar
-  const staggerContainer = {
-    hidden: { opacity: 0 },
-    show: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.1
-      }
-    }
-  };
-  
-  const fadeInUp = {
-    hidden: { opacity: 0, y: 20 },
-    show: { 
-      opacity: 1, 
-      y: 0,
-      transition: {
-        type: "spring",
-        damping: 25,
-        stiffness: 100
-      }
-    }
-  };
-  
-  // Sosyal medya linkleri
-  const socialLinks = [
-    { icon: <FaInstagram className="w-4 h-4" />, href: "https://instagram.com", label: "Instagram" },
-    { icon: <FaBehance className="w-4 h-4" />, href: "https://behance.net", label: "Behance" },
-    { icon: <FaLinkedinIn className="w-4 h-4" />, href: "https://linkedin.com", label: "LinkedIn" },
-  ];
-  
-  // Bilgi kartları
-  const contactInfo = [
-    {
-      icon: (
-        <svg className="w-6 h-6 text-primary" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-        </svg>
-      ),
-      title: "E-posta",
-      info: "info@betulcecen.com"
-    },
-    {
-      icon: (
-        <svg className="w-6 h-6 text-primary" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-        </svg>
-      ),
-      title: "Telefon",
-      info: "+90 541 417 39 59"
-    },
-    {
-      icon: (
-        <svg className="w-6 h-6 text-primary" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-        </svg>
-      ),
-      title: "Konum",
-      info: "İzmir, Türkiye"
-    }
-  ];
-  
-  return (
-    <section className="py-32 relative overflow-hidden">
-      {/* Background decoration */}
-      <div className="absolute top-0 right-0 -mt-20 -mr-20 w-80 h-80 bg-primary/10 rounded-full blur-3xl pointer-events-none"></div>
-      <div className="absolute bottom-0 left-0 -mb-20 -ml-20 w-80 h-80 bg-secondary/10 rounded-full blur-3xl pointer-events-none"></div>
-      
-      <div className="container px-4 mx-auto">
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8 }}
-          className="max-w-3xl mx-auto text-center mb-16"
-        >
-          <div className="inline-block mb-4">
-            <div className="flex items-center justify-center space-x-2 mb-2">
-              <div className="w-8 h-0.5 bg-primary"></div>
-              <p className="text-sm font-medium text-primary">İLETİŞİM</p>
-              <div className="w-8 h-0.5 bg-primary"></div>
+const ContactSection = () => {
+    const [formState, setFormState] = useState({
+        name: '',
+        email: '',
+        message: '',
+        submitted: false,
+        loading: false,
+    });
+
+    const ref = useRef<HTMLDivElement>(null);
+
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        setFormState(prev => ({ ...prev, loading: true }));
+
+        // Form gönderimi simülasyonu
+        setTimeout(() => {
+            setFormState(prev => ({
+                ...prev,
+                submitted: true,
+                loading: false,
+            }));
+        }, 1500);
+    };
+
+    return (
+        <section ref={ref} id="contact" className="py-32 relative overflow-hidden">
+            <div className="absolute inset-0 z-0">
+                <div className="absolute bg-primary/5 w-[500px] h-[500px] rounded-full blur-[150px] top-[-200px] right-[-200px]" />
+                <div className="absolute bg-accent/5 w-[400px] h-[400px] rounded-full blur-[100px] bottom-[-100px] left-[-100px]" />
             </div>
-            <h2 className="text-4xl md:text-5xl font-bold">
-              <span className="text-gradient">İletişime</span> Geçin
-            </h2>
-          </div>
-          <p className="text-lg text-muted-foreground">
-            Projenizle ilgili konuşmak ya da herhangi bir sorunuz için aşağıdaki formu kullanabilirsiniz.
-          </p>
-        </motion.div>
-        
-        <div className="max-w-5xl mx-auto">
-          <div className="grid grid-cols-1 lg:grid-cols-5 gap-12">
-            {/* Contact Info */}
-            <motion.div
-              variants={staggerContainer}
-              initial="hidden"
-              whileInView="show"
-              viewport={{ once: true }}
-              className="lg:col-span-2 space-y-6"
-            >
-              {contactInfo.map((item, index) => (
-                <motion.div 
-                  key={index}
-                  variants={fadeInUp}
-                  className="glassmorphism p-6 border border-border/30 hover:border-primary/30 transition-colors rounded-2xl"
-                  whileHover={{ y: -5, transition: { duration: 0.2 } }}
-                >
-                  <div className="flex items-start space-x-4">
-                    <div className="w-12 h-12 bg-muted rounded-full flex items-center justify-center flex-shrink-0">
-                      {item.icon}
-                    </div>
-                    <div>
-                      <h3 className="text-lg font-bold mb-1">{item.title}</h3>
-                      <p className="text-muted-foreground">{item.info}</p>
-                    </div>
-                  </div>
-                </motion.div>
-              ))}
-              
-              {/* Social Links */}
-              <motion.div variants={fadeInUp} className="mt-8">
-                <h3 className="text-lg font-bold mb-4">Sosyal Medya</h3>
-                <div className="flex space-x-4">
-                  {socialLinks.map((social, idx) => (
-                    <motion.a
-                      key={idx}
-                      href={social.href}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      aria-label={social.label}
-                      className="w-10 h-10 rounded-full bg-muted flex items-center justify-center hover:bg-primary hover:text-primary-foreground transition-colors"
-                      whileHover={{ scale: 1.1 }}
-                      whileTap={{ scale: 0.95 }}
+
+            <div className="container mx-auto px-6 relative z-10">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.5 }}
+                        viewport={{ once: true }}
                     >
-                      {social.icon}
-                    </motion.a>
-                  ))}
+                        <h2 className="text-4xl md:text-5xl font-bold mb-6">
+                            <span className="text-gradient-neon">Haydi </span>
+                            <span className="text-gradient">Tanışalım</span>
+                        </h2>
+
+                        <p className="text-lg md:text-xl text-muted-foreground mt-6 mb-10 max-w-lg">
+                            Projeniz veya sorularınız için iletişime geçebilirsiniz. En kısa sürede
+                            size dönüş yapacağım.
+                        </p>
+
+                        <div className="space-y-8">
+                            <div className="flex items-start space-x-4">
+                                <div className="w-12 h-12 rounded-full bg-muted flex items-center justify-center text-primary flex-shrink-0">
+                                    <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        fill="none"
+                                        viewBox="0 0 24 24"
+                                        strokeWidth={1.5}
+                                        stroke="currentColor"
+                                        className="w-5 h-5"
+                                    >
+                                        <path
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                            d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75"
+                                        />
+                                    </svg>
+                                </div>
+                                <div>
+                                    <h3 className="text-lg font-semibold">Email</h3>
+                                    <a
+                                        href="mailto:info@betulcecen.com"
+                                        className="text-muted-foreground hover:text-primary transition-colors"
+                                    >
+                                        info@betulcecen.com
+                                    </a>
+                                </div>
+                            </div>
+
+                            <div className="flex items-start space-x-4">
+                                <div className="w-12 h-12 rounded-full bg-muted flex items-center justify-center text-primary flex-shrink-0">
+                                    <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        fill="none"
+                                        viewBox="0 0 24 24"
+                                        strokeWidth={1.5}
+                                        stroke="currentColor"
+                                        className="w-5 h-5"
+                                    >
+                                        <path
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                            d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 01-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 00-1.091-.852H4.5A2.25 2.25 0 002.25 4.5v2.25z"
+                                        />
+                                    </svg>
+                                </div>
+                                <div>
+                                    <h3 className="text-lg font-semibold">Telefon</h3>
+                                    <a
+                                        href="tel:+902123334455"
+                                        className="text-muted-foreground hover:text-primary transition-colors"
+                                    >
+                                        +90 212 333 44 55
+                                    </a>
+                                </div>
+                            </div>
+
+                            <div className="flex items-start space-x-4">
+                                <div className="w-12 h-12 rounded-full bg-muted flex items-center justify-center text-primary flex-shrink-0">
+                                    <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        fill="none"
+                                        viewBox="0 0 24 24"
+                                        strokeWidth={1.5}
+                                        stroke="currentColor"
+                                        className="w-5 h-5"
+                                    >
+                                        <path
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                            d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z"
+                                        />
+                                        <path
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                            d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z"
+                                        />
+                                    </svg>
+                                </div>
+                                <div>
+                                    <h3 className="text-lg font-semibold">Konum</h3>
+                                    <p className="text-muted-foreground">İstanbul, Türkiye</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="mt-10 space-y-4">
+                            <h3 className="text-xl font-semibold">Sosyal Medya</h3>
+                            <div className="flex space-x-4">
+                                <a
+                                    href="https://instagram.com"
+                                    target="_blank"
+                                    rel="noreferrer"
+                                    aria-label="Instagram"
+                                    className="w-10 h-10 rounded-full bg-muted flex items-center justify-center text-primary hover:bg-primary hover:text-white transition-colors"
+                                >
+                                    <svg
+                                        className="w-5 h-5"
+                                        fill="currentColor"
+                                        viewBox="0 0 24 24"
+                                        aria-hidden="true"
+                                    >
+                                        <path
+                                            fillRule="evenodd"
+                                            d="M12.315 2c2.43 0 2.784.013 3.808.06 1.064.049 1.791.218 2.427.465a4.902 4.902 0 011.772 1.153 4.902 4.902 0 011.153 1.772c.247.636.416 1.363.465 2.427.048 1.067.06 1.407.06 4.123v.08c0 2.643-.012 2.987-.06 4.043-.049 1.064-.218 1.791-.465 2.427a4.902 4.902 0 01-1.153 1.772 4.902 4.902 0 01-1.772 1.153c-.636.247-1.363.416-2.427.465-1.067.048-1.407.06-4.123.06h-.08c-2.643 0-2.987-.012-4.043-.06-1.064-.049-1.791-.218-2.427-.465a4.902 4.902 0 01-1.772-1.153 4.902 4.902 0 01-1.153-1.772c-.247-.636-.416-1.363-.465-2.427-.047-1.024-.06-1.379-.06-3.808v-.63c0-2.43.013-2.784.06-3.808.049-1.064.218-1.791.465-2.427a4.902 4.902 0 011.153-1.772A4.902 4.902 0 015.45 2.525c.636-.247 1.363-.416 2.427-.465C8.901 2.013 9.256 2 11.685 2h.63zm-.081 1.802h-.468c-2.456 0-2.784.011-3.807.058-.975.045-1.504.207-1.857.344-.467.182-.8.398-1.15.748-.35.35-.566.683-.748 1.15-.137.353-.3.882-.344 1.857-.047 1.023-.058 1.351-.058 3.807v.468c0 2.456.011 2.784.058 3.807.045.975.207 1.504.344 1.857.182.466.399.8.748 1.15.35.35.683.566 1.15.748.353.137.882.3 1.857.344 1.054.048 1.37.058 4.041.058h.08c2.597 0 2.917-.01 3.96-.058.976-.045 1.505-.207 1.858-.344.466-.182.8-.398 1.15-.748.35-.35.566-.683.748-1.15.137-.353.3-.882.344-1.857.048-1.055.058-1.37.058-4.041v-.08c0-2.597-.01-2.917-.058-3.96-.045-.976-.207-1.505-.344-1.858a3.097 3.097 0 00-.748-1.15 3.098 3.098 0 00-1.15-.748c-.353-.137-.882-.3-1.857-.344-1.023-.047-1.351-.058-3.807-.058zM12 6.865a5.135 5.135 0 110 10.27 5.135 5.135 0 010-10.27zm0 1.802a3.333 3.333 0 100 6.666 3.333 3.333 0 000-6.666zm5.338-3.205a1.2 1.2 0 110 2.4 1.2 1.2 0 010-2.4z"
+                                            clipRule="evenodd"
+                                        />
+                                    </svg>
+                                </a>
+                                <a
+                                    href="https://twitter.com"
+                                    target="_blank"
+                                    rel="noreferrer"
+                                    aria-label="Twitter"
+                                    className="w-10 h-10 rounded-full bg-muted flex items-center justify-center text-primary hover:bg-primary hover:text-white transition-colors"
+                                >
+                                    <svg
+                                        className="w-5 h-5"
+                                        fill="currentColor"
+                                        viewBox="0 0 24 24"
+                                        aria-hidden="true"
+                                    >
+                                        <path d="M8.29 20.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0022 5.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.804-2.27 8.224 8.224 0 01-2.605.996 4.107 4.107 0 00-6.993 3.743 11.65 11.65 0 01-8.457-4.287 4.106 4.106 0 001.27 5.477A4.072 4.072 0 012.8 9.713v.052a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.233 8.233 0 012 18.407a11.616 11.616 0 006.29 1.84" />
+                                    </svg>
+                                </a>
+                                <a
+                                    href="https://dribbble.com"
+                                    target="_blank"
+                                    rel="noreferrer"
+                                    aria-label="Dribbble"
+                                    className="w-10 h-10 rounded-full bg-muted flex items-center justify-center text-primary hover:bg-primary hover:text-white transition-colors"
+                                >
+                                    <svg
+                                        className="w-5 h-5"
+                                        fill="currentColor"
+                                        viewBox="0 0 24 24"
+                                        aria-hidden="true"
+                                    >
+                                        <path
+                                            fillRule="evenodd"
+                                            d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10c5.51 0 10-4.48 10-10S17.51 2 12 2zm6.605 4.61a8.502 8.502 0 011.93 5.314c-.281-.054-3.101-.629-5.943-.271-.065-.141-.12-.293-.184-.445a25.416 25.416 0 00-.564-1.236c3.145-1.28 4.577-3.124 4.761-3.362zM12 3.475c2.17 0 4.154.813 5.662 2.148-.152.216-1.443 1.941-4.48 3.08-1.399-2.57-2.95-4.675-3.189-5A8.687 8.687 0 0112 3.475zm-3.633.803a53.896 53.896 0 013.167 4.935c-3.992 1.063-7.517 1.04-7.896 1.04a8.581 8.581 0 014.729-5.975zM3.453 12.01v-.26c.37.01 4.512.065 8.775-1.215.25.477.477.965.694 1.453-.109.033-.228.065-.336.098-4.404 1.42-6.747 5.303-6.942 5.629a8.522 8.522 0 01-2.19-5.705zM12 20.547a8.482 8.482 0 01-5.239-1.8c.152-.315 1.888-3.656 6.703-5.337.022-.01.033-.01.054-.022a35.318 35.318 0 011.823 6.475 8.4 8.4 0 01-3.341.684zm4.761-1.465c-.086-.52-.542-3.015-1.659-6.084 2.679-.423 5.022.271 5.314.369a8.468 8.468 0 01-3.655 5.715z"
+                                            clipRule="evenodd"
+                                        />
+                                    </svg>
+                                </a>
+                            </div>
+                        </div>
+                    </motion.div>
+
+                    <motion.div
+                        className="bg-card border border-border rounded-lg p-8 relative z-10"
+                        initial={{ opacity: 0, y: 20 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.5, delay: 0.1 }}
+                        viewport={{ once: true }}
+                    >
+                        {formState.submitted ? (
+                            <motion.div
+                                className="text-center py-10"
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                transition={{ duration: 0.3 }}
+                            >
+                                <div className="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-6">
+                                    <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        fill="none"
+                                        viewBox="0 0 24 24"
+                                        strokeWidth={1.5}
+                                        stroke="currentColor"
+                                        className="w-10 h-10 text-primary"
+                                    >
+                                        <path
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                            d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                                        />
+                                    </svg>
+                                </div>
+                                <h3 className="text-2xl font-bold mb-2">Teşekkürler!</h3>
+                                <p className="text-muted-foreground">
+                                    Mesajınız başarıyla gönderildi. En kısa sürede size dönüş
+                                    yapacağım.
+                                </p>
+                            </motion.div>
+                        ) : (
+                            <form onSubmit={handleSubmit} className="space-y-6">
+                                <h3 className="text-2xl font-bold mb-6">Mesaj Gönder</h3>
+
+                                <div className="space-y-4">
+                                    <div>
+                                        <label
+                                            htmlFor="name"
+                                            className="block text-sm font-medium mb-2"
+                                        >
+                                            Adınız
+                                        </label>
+                                        <input
+                                            type="text"
+                                            id="name"
+                                            name="name"
+                                            value={formState.name}
+                                            onChange={e =>
+                                                setFormState(prev => ({
+                                                    ...prev,
+                                                    name: e.target.value,
+                                                }))
+                                            }
+                                            className="w-full p-3 rounded-lg bg-muted border border-border focus:border-primary focus:outline-none transition-colors"
+                                            required
+                                        />
+                                    </div>
+
+                                    <div>
+                                        <label
+                                            htmlFor="email"
+                                            className="block text-sm font-medium mb-2"
+                                        >
+                                            Email Adresiniz
+                                        </label>
+                                        <input
+                                            type="email"
+                                            id="email"
+                                            name="email"
+                                            value={formState.email}
+                                            onChange={e =>
+                                                setFormState(prev => ({
+                                                    ...prev,
+                                                    email: e.target.value,
+                                                }))
+                                            }
+                                            className="w-full p-3 rounded-lg bg-muted border border-border focus:border-primary focus:outline-none transition-colors"
+                                            required
+                                        />
+                                    </div>
+
+                                    <div>
+                                        <label
+                                            htmlFor="message"
+                                            className="block text-sm font-medium mb-2"
+                                        >
+                                            Mesajınız
+                                        </label>
+                                        <textarea
+                                            id="message"
+                                            name="message"
+                                            rows={5}
+                                            value={formState.message}
+                                            onChange={e =>
+                                                setFormState(prev => ({
+                                                    ...prev,
+                                                    message: e.target.value,
+                                                }))
+                                            }
+                                            className="w-full p-3 rounded-lg bg-muted border border-border focus:border-primary focus:outline-none transition-colors resize-none"
+                                            required
+                                        ></textarea>
+                                    </div>
+                                </div>
+
+                                <button
+                                    type="submit"
+                                    disabled={formState.loading}
+                                    className="w-full bg-primary text-primary-foreground px-6 py-3 rounded-lg font-medium hover:bg-primary/90 transition-colors flex items-center justify-center disabled:opacity-70"
+                                >
+                                    {formState.loading ? (
+                                        <svg
+                                            className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            fill="none"
+                                            viewBox="0 0 24 24"
+                                        >
+                                            <circle
+                                                className="opacity-25"
+                                                cx="12"
+                                                cy="12"
+                                                r="10"
+                                                stroke="currentColor"
+                                                strokeWidth="4"
+                                            ></circle>
+                                            <path
+                                                className="opacity-75"
+                                                fill="currentColor"
+                                                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                                            ></path>
+                                        </svg>
+                                    ) : null}
+                                    {formState.loading ? 'Gönderiliyor...' : 'Gönder'}
+                                </button>
+                            </form>
+                        )}
+                    </motion.div>
                 </div>
-              </motion.div>
-            </motion.div>
-            
-            {/* Contact Form */}
-            <motion.div 
-              className="lg:col-span-3 glassmorphism rounded-2xl p-8 border border-border/30"
-              initial={{ opacity: 0, x: 50 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.8, delay: 0.2 }}
-            >
-              {submitStatus === 'success' ? (
-                <motion.div 
-                  className="text-center py-12"
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                >
-                  <div className="w-20 h-20 bg-success/10 rounded-full flex items-center justify-center mx-auto mb-6">
-                    <svg className="w-10 h-10 text-success" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                    </svg>
-                  </div>
-                  <h3 className="text-2xl font-bold mb-3">Mesajınız Gönderildi!</h3>
-                  <p className="text-muted-foreground mb-6">
-                    En kısa sürede size geri dönüş yapacağım.
-                  </p>
-                  <motion.button 
-                    onClick={() => {
-                      setSubmitStatus('idle');
-                      setFormData({ name: '', email: '', message: '' });
-                    }}
-                    className="px-6 py-3 bg-muted text-foreground rounded-full hover:bg-primary hover:text-primary-foreground transition-colors"
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                  >
-                    Yeni Mesaj Gönder
-                  </motion.button>
-                </motion.div>
-              ) : (
-                <form onSubmit={handleSubmit}>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                    <div className="space-y-2">
-                      <label htmlFor="name" className="block text-sm font-medium text-muted-foreground">
-                        İsim
-                      </label>
-                      <input
-                        type="text"
-                        id="name"
-                        name="name"
-                        value={formData.name}
-                        onChange={handleChange}
-                        required
-                        className="w-full px-4 py-3 bg-muted/50 border border-border rounded-lg focus:ring-2 focus:ring-primary/50 focus:border-primary outline-none transition"
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <label htmlFor="email" className="block text-sm font-medium text-muted-foreground">
-                        E-posta
-                      </label>
-                      <input
-                        type="email"
-                        id="email"
-                        name="email"
-                        value={formData.email}
-                        onChange={handleChange}
-                        required
-                        className="w-full px-4 py-3 bg-muted/50 border border-border rounded-lg focus:ring-2 focus:ring-primary/50 focus:border-primary outline-none transition"
-                      />
-                    </div>
-                  </div>
-                  
-                  <div className="mb-6 space-y-2">
-                    <label htmlFor="message" className="block text-sm font-medium text-muted-foreground">
-                      Mesajınız
-                    </label>
-                    <textarea
-                      id="message"
-                      name="message"
-                      value={formData.message}
-                      onChange={handleChange}
-                      required
-                      rows={6}
-                      className="w-full px-4 py-3 bg-muted/50 border border-border rounded-lg focus:ring-2 focus:ring-primary/50 focus:border-primary outline-none transition resize-none"
-                    />
-                  </div>
-                  
-                  <div className="text-right">
-                    <motion.button
-                      type="submit"
-                      disabled={isSubmitting}
-                      className={`px-8 py-3 bg-primary text-primary-foreground font-medium rounded-full hover:bg-primary/90 transition-colors ${isSubmitting ? 'opacity-70 cursor-not-allowed' : ''}`}
-                      whileHover={!isSubmitting ? { scale: 1.05 } : {}}
-                      whileTap={!isSubmitting ? { scale: 0.95 } : {}}
-                    >
-                      {isSubmitting ? (
-                        <span className="flex items-center justify-center">
-                          <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                          </svg>
-                          Gönderiliyor...
-                        </span>
-                      ) : 'Gönder'}
-                    </motion.button>
-                  </div>
-                  
-                  {submitStatus === 'error' && (
-                    <motion.p 
-                      className="mt-4 text-center text-destructive"
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                    >
-                      Mesajınız gönderilirken bir hata oluştu. Lütfen tekrar deneyin.
-                    </motion.p>
-                  )}
-                </form>
-              )}
-            </motion.div>
-          </div>
-        </div>
-      </div>
-    </section>
-  );
-} 
+            </div>
+        </section>
+    );
+};
+
+export default ContactSection;

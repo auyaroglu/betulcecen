@@ -1,24 +1,20 @@
 @import "tailwindcss";
 
 :root {
-	--background: #ffffff;
-	--foreground: #171717;
-	--primary: #7c3aed;
+	--background: #0c0c0c;
+	--foreground: #ffffff;
+	--primary: #ef4444;
 	--primary-foreground: #ffffff;
-	--secondary: #f0abfc;
-	--secondary-foreground: #701a75;
-	--accent: #22d3ee;
-	--accent-foreground: #164e63;
-	--muted: #f3f4f6;
-	--muted-foreground: #6b7280;
-	--border: #e5e7eb;
-	--input: #e5e7eb;
-	--card: #ffffff;
-	--card-foreground: #171717;
-	--destructive: #ef4444;
-	--destructive-foreground: #ffffff;
-	--success: #22c55e;
-	--success-foreground: #ffffff;
+	--secondary: #3b82f6;
+	--secondary-foreground: #ffffff;
+	--accent: #f59e0b;
+	--accent-foreground: #ffffff;
+	--muted: #1f1f1f;
+	--muted-foreground: #a1a1aa;
+	--border: #333333;
+	--input: #333333;
+	--card: #1a1a1a;
+	--card-foreground: #ffffff;
 }
 
 @theme inline {
@@ -36,31 +32,8 @@
 	--color-input: var(--input);
 	--color-card: var(--card);
 	--color-card-foreground: var(--card-foreground);
-	--color-destructive: var(--destructive);
-	--color-destructive-foreground: var(--destructive-foreground);
-	--color-success: var(--success);
-	--color-success-foreground: var(--success-foreground);
 	--font-sans: var(--font-geist-sans);
 	--font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-	:root {
-		--background: #030712;
-		--foreground: #f9fafb;
-		--primary: #8b5cf6;
-		--primary-foreground: #ffffff;
-		--secondary: #d8b4fe;
-		--secondary-foreground: #701a75;
-		--accent: #06b6d4;
-		--accent-foreground: #ecfeff;
-		--muted: #1f2937;
-		--muted-foreground: #9ca3af;
-		--border: #374151;
-		--input: #374151;
-		--card: #111827;
-		--card-foreground: #f9fafb;
-	}
 }
 
 body {
@@ -68,6 +41,8 @@ body {
 	color: var(--foreground);
 	font-family: var(--font-sans);
 	position: relative;
+	overflow-x: hidden;
+	cursor: auto;
 }
 
 ::selection {
@@ -75,63 +50,588 @@ body {
 	color: var(--primary-foreground);
 }
 
-/* Şık scrollbar stilleri */
+/* Gelişmiş scrollbar stilleri */
 ::-webkit-scrollbar {
-	width: 10px;
-	height: 10px;
+	width: 6px;
+	height: 6px;
 }
 
 ::-webkit-scrollbar-track {
 	background: var(--muted);
-	border-radius: 8px;
 }
 
 ::-webkit-scrollbar-thumb {
-	background: linear-gradient(to bottom, var(--primary), var(--secondary));
-	border-radius: 8px;
-	border: 2px solid var(--muted);
-	transition: all 0.3s ease;
+	background: var(--primary);
+	border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-	background: var(--primary);
+	background: var(--accent);
 }
 
-/* Firefox için scrollbar stili */
 * {
 	scrollbar-width: thin;
 	scrollbar-color: var(--primary) var(--muted);
 }
 
-.glassmorphism {
-	background: rgba(255, 255, 255, 0.05);
-	backdrop-filter: blur(8px);
-	border: 1px solid rgba(255, 255, 255, 0.1);
-	border-radius: 1rem;
-}
-
-.dark .glassmorphism {
-	background: rgba(0, 0, 0, 0.2);
-}
-
-.glow {
-	position: relative;
-}
-
-.glow::after {
-	content: "";
-	position: absolute;
-	inset: 0;
-	z-index: -1;
-	background: radial-gradient(circle at center, var(--primary) 0%, transparent 70%);
-	opacity: 0.15;
-	filter: blur(30px);
+/* Özel Stil Sınıfları */
+.text-outline {
+	color: transparent;
+	-webkit-text-stroke: 1px var(--foreground);
 }
 
 .text-gradient {
-	background: linear-gradient(to right, var(--primary), var(--secondary));
+	background: linear-gradient(to right, var(--primary), var(--secondary), var(--accent));
 	-webkit-background-clip: text;
 	-webkit-text-fill-color: transparent;
 	background-clip: text;
 	color: transparent;
+}
+
+.glassmorphism {
+	background: rgba(20, 20, 20, 0.5);
+	backdrop-filter: blur(12px);
+	border: 1px solid rgba(255, 255, 255, 0.1);
+	border-radius: 1rem;
+}
+
+.smooth-scroll {
+	scroll-behavior: smooth;
+}
+
+.cursor-dot {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 8px;
+	height: 8px;
+	background-color: var(--primary);
+	border-radius: 50%;
+	pointer-events: none;
+	z-index: 9999;
+}
+
+.cursor-outline {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 40px;
+	height: 40px;
+	border: 2px solid var(--primary);
+	border-radius: 50%;
+	pointer-events: none;
+	z-index: 9998;
+}
+
+.clip-path-diagonal {
+	clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%);
+}
+
+.horizontal-scroll-container {
+	overflow-x: auto;
+	overflow-y: hidden;
+	white-space: nowrap;
+	-webkit-overflow-scrolling: touch;
+	width: 100%;
+}
+
+.scroll-reveal {
+	opacity: 0;
+	transform: translateY(50px);
+	transition: all 1s ease;
+}
+
+.scroll-reveal.is-visible {
+	opacity: 1;
+	transform: translateY(0);
+}
+
+.noise-bg {
+	position: relative;
+}
+
+.noise-bg::before {
+	content: "";
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+	opacity: 0.05;
+	pointer-events: none;
+}
+
+.hide-scrollbar {
+	-ms-overflow-style: none;
+	scrollbar-width: none;
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+	display: none;
+}
+
+/* Smooth Scroll ve Locomotive Scroll için */
+html.has-scroll-smooth {
+	overflow: hidden;
+}
+
+html.has-scroll-dragging {
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+}
+
+.has-scroll-smooth body {
+	overflow: hidden;
+}
+
+/* Sayfa geçişleri için */
+.page-transition-enter {
+	opacity: 0;
+}
+
+.page-transition-enter-active {
+	opacity: 1;
+	transition: opacity 400ms;
+}
+
+.page-transition-exit {
+	opacity: 1;
+}
+
+.page-transition-exit-active {
+	opacity: 0;
+	transition: opacity 400ms;
+}
+
+/* Danilo De Marco sitesindeki gibi efektler */
+.split-word {
+	overflow: hidden;
+	display: inline-block;
+}
+
+.magnetic-button {
+	display: inline-block;
+	transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.marquee {
+	position: relative;
+	overflow: hidden;
+	--offset: 20vw;
+	--move-initial: calc(-25% + var(--offset));
+	--move-final: calc(-50% + var(--offset));
+}
+
+.marquee__inner {
+	width: fit-content;
+	display: flex;
+	position: relative;
+	transform: translate3d(var(--move-initial), 0, 0);
+	animation: marquee 20s linear infinite;
+}
+
+@keyframes marquee {
+	0% {
+		transform: translate3d(var(--move-initial), 0, 0);
+	}
+	100% {
+		transform: translate3d(var(--move-final), 0, 0);
+	}
+}
+
+.rotate-on-scroll {
+	transform-style: preserve-3d;
+	will-change: transform;
+}
+
+.scale-on-scroll {
+	transform-origin: center;
+	will-change: transform;
+}
+
+.parallax {
+	position: relative;
+	overflow: hidden;
+}
+
+.parallax-layer {
+	position: absolute;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	will-change: transform;
+}
+
+/* Custom cursor */
+html,
+body {
+	cursor: none;
+}
+
+a,
+button,
+[role="button"],
+[role="link"] {
+	cursor: none;
+}
+
+/* Marquee animation */
+@keyframes marquee {
+	from {
+		transform: translateX(0);
+	}
+	to {
+		transform: translateX(-50%);
+	}
+}
+
+.marquee {
+	position: relative;
+	width: 100%;
+	overflow: hidden;
+}
+
+.marquee__inner {
+	display: flex;
+	width: max-content;
+	animation: marquee 30s linear infinite;
+}
+
+/* 3D card effect */
+.card-3d {
+	transform-style: preserve-3d;
+	transition: transform 0.8s cubic-bezier(0.43, 0.13, 0.23, 0.96);
+}
+
+.card-3d:hover {
+	transform: translateY(-10px) rotateX(2deg) rotateY(2deg);
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+	width: 8px;
+}
+
+::-webkit-scrollbar-track {
+	background: rgba(0, 0, 0, 0.05);
+}
+
+::-webkit-scrollbar-thumb {
+	background: var(--primary);
+	border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+	background: var(--primary-foreground);
+}
+
+/* Background noise effect */
+.noise-bg {
+	position: relative;
+}
+
+.noise-bg::before {
+	content: "";
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	opacity: 0.03;
+	z-index: 1;
+	pointer-events: none;
+	background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+}
+
+/* Glow effect */
+.glow-effect {
+	position: relative;
+	overflow: hidden;
+}
+
+.glow-effect::after {
+	content: "";
+	position: absolute;
+	top: -50%;
+	left: -50%;
+	width: 200%;
+	height: 200%;
+	background: radial-gradient(circle, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0) 70%);
+	opacity: 0;
+	transition: opacity 0.6s ease;
+	pointer-events: none;
+	transform: translate(0, 0);
+}
+
+.glow-effect:hover::after {
+	opacity: 1;
+	transform: translate(25%, 25%);
+}
+
+/* Skewed section divider */
+.skewed-divider {
+	position: relative;
+	height: 100px;
+	overflow: hidden;
+}
+
+.skewed-divider::after {
+	content: "";
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background: var(--background);
+	transform: skewY(-3deg);
+	transform-origin: left;
+}
+
+/* Image hover reveal effect */
+.image-reveal {
+	position: relative;
+	overflow: hidden;
+}
+
+.image-reveal img {
+	transition: transform 0.7s cubic-bezier(0.43, 0.13, 0.23, 0.96);
+}
+
+.image-reveal::after {
+	content: "";
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background: var(--primary);
+	transform: translateY(100%);
+	transition: transform 0.7s cubic-bezier(0.43, 0.13, 0.23, 0.96);
+}
+
+.image-reveal:hover img {
+	transform: scale(1.1);
+}
+
+.image-reveal:hover::after {
+	transform: translateY(0);
+	opacity: 0;
+	transition-delay: 0.1s;
+}
+
+/* Floating elements animation */
+@keyframes float {
+	0% {
+		transform: translateY(0px);
+	}
+	50% {
+		transform: translateY(-20px);
+	}
+	100% {
+		transform: translateY(0px);
+	}
+}
+
+.float-animation {
+	animation: float 6s ease-in-out infinite;
+}
+
+.float-animation-delayed {
+	animation: float 7s ease-in-out 1s infinite;
+}
+
+/* Yatay kaydırma sorunu için */
+body,
+html {
+	max-width: 100%;
+	overflow-x: hidden;
+}
+
+/* Performans optimizasyonu için */
+.optimize-animation {
+	will-change: transform, opacity;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	*,
+	::before,
+	::after {
+		animation-duration: 0.01ms !important;
+		animation-iteration-count: 1 !important;
+		transition-duration: 0.01ms !important;
+		scroll-behavior: auto !important;
+	}
+}
+
+/* Yarım görünen yazılar için responsive düzenleme */
+@media (max-width: 1200px) {
+	.responsive-text {
+		font-size: 10vw !important;
+	}
+}
+
+@media (max-width: 768px) {
+	.responsive-text {
+		font-size: 8vw !important;
+	}
+}
+
+@media (max-width: 480px) {
+	.responsive-text {
+		font-size: 6vw !important;
+	}
+}
+
+/* CustomCursor aktif olduğunda mouse gizleme */
+.has-custom-cursor {
+	cursor: none;
+}
+
+/* Bu satır önemli: CustomCursor'un doğru çalışması için */
+.custom-cursor-active {
+	cursor: none !important;
+}
+
+/* Perspective ve 3D efektleri */
+.perspective {
+	perspective: 1000px;
+	transform-style: preserve-3d;
+}
+
+.transform-gpu {
+	transform: translateZ(0);
+	backface-visibility: hidden;
+	will-change: transform;
+}
+
+.rotate-y-2 {
+	transform: rotateY(2deg);
+}
+
+.rotate-y-3 {
+	transform: rotateY(3deg);
+}
+
+.rotate-x-2 {
+	transform: rotateX(2deg);
+}
+
+.optimize-animation {
+	will-change: transform, opacity;
+	contain: layout style paint;
+}
+
+.custom-cursor {
+	pointer-events: none;
+}
+
+/* Danilodemarco.com stilinde yazı animasyonları */
+.text-outline {
+	-webkit-text-stroke: 1px rgba(255, 255, 255, 0.3);
+	color: transparent;
+}
+
+.text-gradient {
+	background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+	-webkit-background-clip: text;
+	-webkit-text-fill-color: transparent;
+}
+
+/* Yeni sıradışı gradient efektleri */
+.text-gradient-creative {
+	background: linear-gradient(90deg, #ff3d00, #ff9e80);
+	-webkit-background-clip: text;
+	-webkit-text-fill-color: transparent;
+	background-clip: text;
+}
+
+.text-gradient-vibrant {
+	background: linear-gradient(90deg, #00c6ff, #0072ff);
+	-webkit-background-clip: text;
+	-webkit-text-fill-color: transparent;
+	background-clip: text;
+}
+
+.text-gradient-bold {
+	background: linear-gradient(90deg, #ff416c, #ff4b2b);
+	-webkit-background-clip: text;
+	-webkit-text-fill-color: transparent;
+	background-clip: text;
+}
+
+.text-gradient-neon {
+	background: linear-gradient(90deg, #12c2e9, #c471ed, #f64f59);
+	-webkit-background-clip: text;
+	-webkit-text-fill-color: transparent;
+	background-clip: text;
+	animation: gradient-shift 8s ease infinite;
+}
+
+.text-gradient-soft {
+	background: linear-gradient(90deg, #5ee7df, #b490ca);
+	-webkit-background-clip: text;
+	-webkit-text-fill-color: transparent;
+	background-clip: text;
+}
+
+.text-gradient-sunset {
+	background: linear-gradient(90deg, #fc466b, #3f5efb);
+	-webkit-background-clip: text;
+	-webkit-text-fill-color: transparent;
+	background-clip: text;
+}
+
+.text-gradient-rainbow {
+	background: linear-gradient(90deg, #fc0, #f09, #0cf, #0f9, #fc0);
+	background-size: 300% 100%;
+	-webkit-background-clip: text;
+	-webkit-text-fill-color: transparent;
+	background-clip: text;
+	animation: rainbow-shift 8s linear infinite;
+}
+
+@keyframes gradient-shift {
+	0% {
+		background-position: 0% 50%;
+	}
+	50% {
+		background-position: 100% 50%;
+	}
+	100% {
+		background-position: 0% 50%;
+	}
+}
+
+@keyframes rainbow-shift {
+	0% {
+		background-position: 0% 50%;
+	}
+	100% {
+		background-position: 100% 50%;
+	}
+}
+
+.text-outline-bold {
+	-webkit-text-stroke: 2px rgba(255, 255, 255, 0.6);
+	color: transparent;
+}
+
+.text-outline-gradient {
+	-webkit-text-stroke: 1px;
+	-webkit-text-stroke-color: #5ee7df;
+	color: transparent;
+}
+
+.text-outline-contrast {
+	-webkit-text-stroke: 1px #ff416c;
+	color: transparent;
+}
+
+.responsive-text {
+	line-height: 0.9;
+	letter-spacing: -0.02em;
 }

@@ -1,15 +1,17 @@
 import './globals.css';
-import type { Metadata } from 'next';
-import { Geist, Geist_Mono } from 'next/font/google';
-import Navbar from '../components/ui/Navbar';
-import Footer from '../components/ui/Footer';
+import type { Metadata, Viewport } from 'next';
+import { Inter } from 'next/font/google';
+import localFont from 'next/font/local';
+import CustomCursor from '@/components/ui/CustomCursor';
+import { SmoothScrollProvider } from '@/components/ui/SmoothScrollProvider';
+import PageTransition from '@/components/ui/PageTransition';
 
-const geistSans = Geist({
+const geistSans = Inter({
     subsets: ['latin'],
     variable: '--font-geist-sans',
 });
 
-const geistMono = Geist_Mono({
+const geistMono = Inter({
     subsets: ['latin'],
     variable: '--font-geist-mono',
 });
@@ -25,19 +27,22 @@ export const metadata: Metadata = {
             noimageindex: true,
         },
     },
-    title: 'Grafik Tasarımcı Portfolyo',
-    description: 'Profesyonel grafik tasarımcı portföy sitesi',
+    title: 'Betül Çeçen | Kreatif Grafik Tasarımcı',
+    description: 'Yaratıcı ve özgün grafik tasarım çözümleri sunan profesyonel portfolyo sitesi',
+    keywords: 'grafik tasarım, portfolyo, kreatif, logo, branding, web tasarım',
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
     return (
-        <html lang="tr">
+        <html lang="tr" className="smooth-scroll">
             <body
-                className={`${geistSans.variable} ${geistMono.variable} min-h-screen bg-background text-foreground antialiased overflow-x-hidden`}
+                className={`${geistSans.variable} ${geistMono.variable} bg-background text-foreground antialiased relative custom-cursor-active`}
+                suppressHydrationWarning
             >
-                <Navbar />
-                {children}
-                <Footer />
+                <SmoothScrollProvider>
+                    <PageTransition>{children}</PageTransition>
+                    <CustomCursor />
+                </SmoothScrollProvider>
             </body>
         </html>
     );

@@ -1,0 +1,11 @@
+<svg width="800" height="800" viewBox="0 0 800 800" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="800" height="800" fill="#1E1E1E"/>
+  <path d="M400 650C544.264 650 661 533.264 661 389C661 244.736 544.264 128 400 128C255.736 128 139 244.736 139 389C139 533.264 255.736 650 400 650Z" fill="#1E1E1E" stroke="#9A81FF" stroke-width="3"/>
+  <path d="M400 210C400 210 420 235 445 235C470 235 500 210 500 210" stroke="#9A81FF" stroke-width="3" stroke-linecap="round"/>
+  <path d="M300 210C300 210 330 235 355 235C380 235 400 210 400 210" stroke="#9A81FF" stroke-width="3" stroke-linecap="round"/>
+  <path d="M400 280C400 280 380 320 380 350C380 380 400 400 400 400C400 400 420 380 420 350C420 320 400 280 400 280Z" stroke="#9A81FF" stroke-width="3" stroke-linecap="round"/>
+  <path d="M350 450C350 450 375 470 400 470C425 470 450 450 450 450" stroke="#9A81FF" stroke-width="3" stroke-linecap="round"/>
+  <path d="M330 240C330 240 310 290 300 350C290 410 290 450 290 450" stroke="#9A81FF" stroke-width="3" stroke-linecap="round"/>
+  <path d="M470 240C470 240 490 290 500 350C510 410 510 450 510 450" stroke="#9A81FF" stroke-width="3" stroke-linecap="round"/>
+  <path d="M310 500C310 500 350 550 400 550C450 550 490 500 490 500" stroke="#9A81FF" stroke-width="3" stroke-linecap="round"/>
+</svg> 

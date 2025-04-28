@@ -1,150 +1,250 @@
-"use client";
+'use client';
 
-import React from 'react';
+import { useRef, useState, useEffect } from 'react';
+import { motion, useScroll, useTransform } from 'framer-motion';
 import Link from 'next/link';
-import { motion } from 'framer-motion';
+import Image from 'next/image';
 
-// Animasyon varyantları
-const containerVariants = {
-  hidden: { opacity: 0 },
-  visible: { 
-    opacity: 1,
-    transition: { 
-      staggerChildren: 0.1,
-      delayChildren: 0.3,
-    }
-  }
-};
+const HeroSection = () => {
+    const ref = useRef<HTMLDivElement>(null);
+    const [isReducedMotion, setIsReducedMotion] = useState(false);
+    const [isMounted, setIsMounted] = useState(false);
 
-const itemVariants = {
-  hidden: { y: 20, opacity: 0 },
-  visible: { 
-    y: 0, 
-    opacity: 1,
-    transition: { duration: 0.7 }
-  }
-};
+    useEffect(() => {
+        setIsMounted(true);
+        const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+        setIsReducedMotion(mediaQuery.matches);
 
-// Animasyonlu elips bileşeni
-const AnimatedBlob = ({ className }: { className: string }) => {
-  return (
-    <motion.div 
-      className={`absolute rounded-full blur-3xl opacity-30 ${className}`}
-      animate={{
-        scale: [1, 1.1, 1],
-        rotate: [0, 5, 0],
-        opacity: [0.3, 0.35, 0.3],
-      }}
-      transition={{
-        duration: 8,
-        repeat: Infinity,
-        repeatType: "reverse",
-      }}
-    />
-  );
-};
+        const handleChange = () => setIsReducedMotion(mediaQuery.matches);
+        mediaQuery.addEventListener('change', handleChange);
+        return () => mediaQuery.removeEventListener('change', handleChange);
+    }, []);
 
-export default function HeroSection() {
-  return (
-    <section className="relative w-full min-h-screen flex flex-col items-center justify-center overflow-hidden py-20">
-      {/* Animated background blobs */}
-      <AnimatedBlob className="w-[500px] h-[500px] bg-primary/30 top-[-250px] right-[-100px]" />
-      <AnimatedBlob className="w-[600px] h-[600px] bg-secondary/20 bottom-[-300px] left-[-200px]" />
-      <AnimatedBlob className="w-[300px] h-[300px] bg-accent/20 top-[30%] left-[20%]" />
-      
-      <div className="container px-4 mx-auto z-10 relative">
-        <motion.div 
-          className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center"
-          variants={containerVariants}
-          initial="hidden"
-          animate="visible"
-        >
-          <div className="space-y-8">
-            <motion.div className="flex items-center space-x-2 mb-4" variants={itemVariants}>
-              <div className="w-12 h-0.5 bg-primary"></div>
-              <p className="text-sm font-medium uppercase tracking-widest text-primary">Grafik Tasarımcı</p>
-            </motion.div>
-            
-            <motion.h1 
-              className="text-5xl md:text-7xl font-bold"
-              variants={itemVariants}
-            >
-              Yaratıcı <span className="text-gradient">Tasarım</span> Çözümleri
-            </motion.h1>
-            
-            <motion.p 
-              className="text-xl text-muted-foreground"
-              variants={itemVariants}
-            >
-              Markanızı öne çıkaracak, etkileyici ve akılda kalıcı tasarımlar için doğru adrestesiniz.
-            </motion.p>
-            
-            <motion.div 
-              className="flex flex-col sm:flex-row gap-4"
-              variants={itemVariants}
-            >
-              <Link href="/projeler" 
-                className="px-8 py-3 bg-primary text-primary-foreground font-medium rounded-full hover:bg-primary/90 transition-colors"
-              >
-                Projelerim
-              </Link>
-              <Link href="/iletisim" 
-                className="px-8 py-3 border border-border text-foreground font-medium rounded-full hover:bg-muted transition-colors"
-              >
-                İletişime Geç
-              </Link>
-            </motion.div>
-          </div>
-          
-          <motion.div 
-            className="relative h-[500px] w-full glow"
-            variants={itemVariants}
-          >
-            {/* 3D Card Effect */}
-            <div className="group perspective w-full h-full">
-              <motion.div 
-                className="w-full h-full relative preserve-3d transition-all duration-500 hover:rotate-y-10 hover:rotate-x-10"
-                whileHover={{ scale: 1.02 }}
-                initial={{ opacity: 0, rotateX: 10, rotateY: -10 }}
-                animate={{ opacity: 1, rotateX: 0, rotateY: 0 }}
-                transition={{ duration: 0.8, delay: 0.5 }}
-              >
-                <div className="absolute inset-4 bg-gradient-to-br from-primary/30 to-secondary/30 rounded-2xl transform rotate-3 z-10"></div>
-                <div className="absolute inset-4 glassmorphism rounded-2xl transform -rotate-3 z-20"></div>
-                <div className="absolute inset-0 flex items-center justify-center z-30">
-                  <div className="text-center p-8">
-                    <div className="w-32 h-32 mx-auto rounded-full bg-gradient-to-br from-primary to-secondary mb-6 flex items-center justify-center">
-                      <span className="text-4xl text-white">BC</span>
+    const { scrollYProgress } = useScroll({
+        target: ref,
+        offset: ['start start', 'end start'],
+    });
+
+    // Daha hafif paralaks efektleri
+    const y1 = useTransform(scrollYProgress, [0, 1], [0, 100]);
+    const y2 = useTransform(scrollYProgress, [0, 1], [0, 200]);
+    const y3 = useTransform(scrollYProgress, [0, 1], [0, 300]);
+    const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
+
+    // Güvenilir ve optimize edilmiş görsel URL'leri
+    const mainImage = 'https://images.unsplash.com/photo-1626785774573-4b799315345d?q=80&w=2000';
+    const secondaryImage = 'https://images.unsplash.com/photo-1558655146-d09347e92766?q=80&w=1000';
+    const thirdImage = 'https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?q=80&w=1000';
+
+    // Client-side rendering için JSX
+    if (!isMounted) {
+        return (
+            <div className="min-h-screen flex items-center justify-center relative py-20 md:py-32 overflow-hidden noise-bg">
+                <div className="container mx-auto px-4 md:px-6 relative z-10">
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 md:gap-16 items-center">
+                        {/* İçerik yüklenene kadar yükleme yertutucu */}
+                        <div className="h-[300px] md:h-[400px]"></div>
+                        <div className="hidden lg:block h-[500px]"></div>
                     </div>
-                    <h3 className="text-2xl font-bold mb-2">Betül Çeçen</h3>
-                    <p className="text-muted-foreground">Grafik Tasarımcı & İllüstratör</p>
-                  </div>
                 </div>
-              </motion.div>
             </div>
-          </motion.div>
-        </motion.div>
-      </div>
-      
-      {/* Scroll Indicator */}
-      <motion.div 
-        className="absolute bottom-10 left-0 right-0 mx-auto w-6 h-10 rounded-full border-2 border-muted-foreground flex items-start justify-center"
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.7, delay: 1.5 }}
-      >
-        <motion.div 
-          className="w-1.5 h-1.5 bg-primary rounded-full"
-          animate={{ 
-            y: [0, 12, 0],
-          }}
-          transition={{ 
-            duration: 1.5, 
-            repeat: Infinity,
-            repeatType: "loop" 
-          }}
-        />
-      </motion.div>
-    </section>
-  );
-} 
+        );
+    }
+
+    return (
+        <div
+            ref={ref}
+            className="min-h-screen flex items-center justify-center relative py-20 md:py-32 overflow-hidden noise-bg"
+        >
+            <div className="absolute inset-0 z-0">
+                <div className="absolute bg-primary/10 w-[300px] md:w-[600px] h-[300px] md:h-[600px] rounded-full blur-[80px] md:blur-[120px] top-[-150px] md:top-[-300px] left-[-150px] md:left-[-300px]" />
+                <div className="absolute bg-accent/10 w-[300px] md:w-[600px] h-[300px] md:h-[600px] rounded-full blur-[80px] md:blur-[120px] bottom-[-175px] md:bottom-[-350px] right-[-150px] md:right-[-300px]" />
+            </div>
+
+            <div className="container mx-auto px-4 md:px-6 relative z-10">
+                <motion.div
+                    className="grid grid-cols-1 lg:grid-cols-2 gap-10 md:gap-16 items-center"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ duration: 0.8, ease: [0.43, 0.13, 0.23, 0.96] }}
+                >
+                    <div className="relative z-10">
+                        <motion.div
+                            className="overflow-hidden"
+                            initial={{ opacity: 0, y: 30 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.7, ease: [0.43, 0.13, 0.23, 0.96] }}
+                        >
+                            <span className="text-gradient-creative uppercase font-medium tracking-wider">
+                                Kreatif Tasarımcı & İllüstratör
+                            </span>
+                        </motion.div>
+
+                        <div>
+                            <div className="overflow-hidden mt-4">
+                                <motion.h1
+                                    className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-6 optimize-animation"
+                                    initial={{ y: 80 }}
+                                    animate={{ y: 0 }}
+                                    transition={{
+                                        duration: 0.8,
+                                        ease: [0.43, 0.13, 0.23, 0.96],
+                                        delay: 0.1,
+                                    }}
+                                    style={!isReducedMotion && isMounted ? { y: y1 } : {}}
+                                >
+                                    <span className="block text-gradient-soft">Tasarım</span>
+                                    <span className="block text-gradient-sunset">Hikayeler</span>
+                                    <span className="block text-gradient-vibrant">Anlatır</span>
+                                </motion.h1>
+                            </div>
+
+                            <motion.p
+                                className="text-muted-foreground text-base md:text-lg lg:text-xl max-w-md optimize-animation"
+                                initial={{ opacity: 0, y: 20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{
+                                    duration: 0.8,
+                                    ease: [0.43, 0.13, 0.23, 0.96],
+                                    delay: 0.3,
+                                }}
+                                style={!isReducedMotion && isMounted ? { y: y2 } : {}}
+                            >
+                                Markanızın hikayesini etkileyici tasarımlarla göz alıcı hale
+                                getiriyorum. Her bir proje, özel hikayesini anlatan benzersiz bir
+                                deneyim.
+                            </motion.p>
+
+                            <motion.div
+                                className="mt-6 md:mt-8 flex flex-col sm:flex-row gap-4 optimize-animation"
+                                initial={{ opacity: 0, y: 20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{
+                                    duration: 0.8,
+                                    ease: [0.43, 0.13, 0.23, 0.96],
+                                    delay: 0.4,
+                                }}
+                                style={!isReducedMotion && isMounted ? { y: y3 } : {}}
+                            >
+                                <Link
+                                    href="/projeler"
+                                    className="bg-primary text-primary-foreground px-6 md:px-8 py-3 rounded-full inline-block font-medium hover:bg-primary/90 transition-colors"
+                                >
+                                    Projeleri Keşfet
+                                </Link>
+                                <Link
+                                    href="/iletisim"
+                                    className="border border-border text-foreground px-6 md:px-8 py-3 rounded-full inline-block font-medium hover:bg-muted transition-colors"
+                                >
+                                    İletişime Geç
+                                </Link>
+                            </motion.div>
+                        </div>
+                    </div>
+
+                    <motion.div
+                        className="relative overflow-hidden hidden lg:block"
+                        style={isMounted ? { opacity } : {}}
+                    >
+                        <motion.div
+                            className="relative z-20 optimize-animation"
+                            initial={{ scale: 0.9, opacity: 0, y: 20 }}
+                            animate={{ scale: 1, opacity: 1, y: 0 }}
+                            transition={{
+                                duration: 0.8,
+                                ease: [0.43, 0.13, 0.23, 0.96],
+                                delay: 0.2,
+                            }}
+                            style={!isReducedMotion && isMounted ? { y: y2 } : {}}
+                        >
+                            <div className="relative rounded-xl h-[500px] w-full overflow-hidden">
+                                <Image
+                                    src={mainImage}
+                                    alt="Yaratıcı Tasarım"
+                                    className="object-cover"
+                                    fill
+                                    sizes="(max-width: 768px) 100vw, 50vw"
+                                    priority
+                                />
+                                <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent"></div>
+                            </div>
+                        </motion.div>
+
+                        <motion.div
+                            className="absolute top-[10%] -right-[5%] md:-right-[10%] z-10 optimize-animation"
+                            initial={{ rotate: -5, scale: 0.8, opacity: 0, y: 80 }}
+                            animate={{ rotate: 0, scale: 1, opacity: 1, y: 0 }}
+                            transition={{
+                                duration: 0.8,
+                                ease: [0.43, 0.13, 0.23, 0.96],
+                                delay: 0.4,
+                            }}
+                            style={!isReducedMotion && isMounted ? { y: y1 } : {}}
+                        >
+                            <div className="relative rounded-xl h-[220px] md:h-[300px] w-[180px] md:w-[250px] overflow-hidden shadow-2xl">
+                                <Image
+                                    src={secondaryImage}
+                                    alt="Tasarım Süreci"
+                                    className="object-cover"
+                                    fill
+                                    sizes="(max-width: 768px) 30vw, 20vw"
+                                />
+                            </div>
+                        </motion.div>
+
+                        <motion.div
+                            className="absolute bottom-[5%] -left-[5%] z-30 optimize-animation"
+                            initial={{ rotate: 5, scale: 0.8, opacity: 0, y: 20 }}
+                            animate={{ rotate: 0, scale: 1, opacity: 1, y: 0 }}
+                            transition={{
+                                duration: 0.8,
+                                ease: [0.43, 0.13, 0.23, 0.96],
+                                delay: 0.6,
+                            }}
+                            style={!isReducedMotion && isMounted ? { y: y3 } : {}}
+                        >
+                            <div className="relative rounded-xl h-[150px] md:h-[200px] w-[130px] md:w-[180px] overflow-hidden shadow-2xl">
+                                <Image
+                                    src={thirdImage}
+                                    alt="Yaratıcı Çalışma Alanı"
+                                    className="object-cover"
+                                    fill
+                                    sizes="(max-width: 768px) 20vw, 15vw"
+                                />
+                            </div>
+                        </motion.div>
+                    </motion.div>
+                </motion.div>
+            </div>
+
+            {isMounted && !isReducedMotion && (
+                <motion.div
+                    className="absolute bottom-10 md:bottom-20 left-1/2 transform -translate-x-1/2 optimize-animation"
+                    initial={{ opacity: 0, y: -20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 1, delay: 1, ease: [0.43, 0.13, 0.23, 0.96] }}
+                    style={{ opacity }}
+                >
+                    <div className="flex flex-col items-center">
+                        <span className="text-muted-foreground text-sm mb-2">Aşağı Kaydır</span>
+                        <div className="w-6 h-10 border-2 border-muted-foreground rounded-full flex items-start justify-center p-1">
+                            <motion.div
+                                className="w-1.5 h-1.5 bg-primary rounded-full"
+                                animate={{
+                                    y: [0, 12, 0],
+                                }}
+                                transition={{
+                                    duration: 1.5,
+                                    repeat: Infinity,
+                                    repeatType: 'loop',
+                                }}
+                            />
+                        </div>
+                    </div>
+                </motion.div>
+            )}
+        </div>
+    );
+};
+
+export default HeroSection;
