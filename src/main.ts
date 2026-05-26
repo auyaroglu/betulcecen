@@ -340,7 +340,7 @@ function actorIn(master: gsap.core.Timeline, nextAct: HTMLElement, t: number, D:
       { opacity: 0.9, y: 0, rotation: 0, ease: "back.out(1.4)", duration: D * 1.0 }, t + D * 0.15);
   }
 
-  // REAL IMAGE ACTORS — each scene's hero illustration with its own motion
+  // IMAGE ACTORS — each scene's hero illustration with its own motion
   const actorImgs = nextAct.querySelectorAll<HTMLElement>("[data-actor]");
   actorImgs.forEach((img) => {
     const c = img.classList;
@@ -359,28 +359,34 @@ function actorIn(master: gsap.core.Timeline, nextAct: HTMLElement, t: number, D:
       master.fromTo(img,
         { opacity: 0, x: -240, rotation: -15, scale: 0.85 },
         { opacity: 1, x: 0, rotation: 0, scale: 1, ease: "expo.out", duration: D * 1.0 }, t + D * 0.18);
-    } else if (c.contains("actor-brush")) {
-      // brush stroke draws itself wide via scaleX
-      master.fromTo(img,
-        { opacity: 0, scaleX: 0, scaleY: 1, rotation: -3 },
-        { opacity: 0.85, scaleX: 1, rotation: 0, ease: "expo.out", duration: D * 1.1 }, t + D * 0.15);
-    } else if (c.contains("actor-bird")) {
-      // bird flies across the full width during the scene's lifetime
-      master.fromTo(img,
-        { opacity: 0 },
-        { opacity: 0.7, ease: "none", duration: D * 0.25 }, t + D * 0.1);
-      master.fromTo(img,
-        { x: 0, y: 0 },
-        { x: "100vw", y: 80, ease: "none", duration: D * 1.5 }, t + D * 0.1);
     }
   });
+
+  // SVG ACTOR — calligraphic brushstroke that DRAWS ITSELF
+  const brush = nextAct.querySelector<SVGPathElement>("[data-brush] path");
+  if (brush) {
+    master.fromTo(brush,
+      { opacity: 0, strokeDashoffset: 100 },
+      { opacity: 1, strokeDashoffset: 0, ease: "power2.out", duration: D * 1.2 }, t + D * 0.10);
+  }
+
+  // SVG ACTOR — bird flies across the sky (wings flap via SMIL inside the SVG)
+  const bird = nextAct.querySelector<HTMLElement>("[data-bird]");
+  if (bird) {
+    master.fromTo(bird,
+      { opacity: 0 },
+      { opacity: 1, ease: "none", duration: D * 0.2 }, t + D * 0.1);
+    master.fromTo(bird,
+      { x: 0, y: 0 },
+      { x: "115vw", y: 80, ease: "none", duration: D * 1.5 }, t + D * 0.1);
+  }
 }
 
 /* Quickly fade out every actor of the OUTgoing scene so they don't
    bleed visually into the next one. */
 function actorOut(master: gsap.core.Timeline, curAct: HTMLElement, t: number, D: number) {
   const actors = curAct.querySelectorAll<HTMLElement>(
-    "[data-actor], [data-paper], [data-ornament], [data-ribbon]"
+    "[data-actor], [data-paper], [data-ornament], [data-ribbon], [data-brush], [data-bird]"
   );
   if (actors.length) {
     master.to(actors, { opacity: 0, ease: "power1.in", duration: D * 0.45 }, t + D * 0.55);
@@ -426,7 +432,7 @@ function initScenes() {
   // Set all actors to hidden initially so they don't flash on page load
   acts.forEach((act) => {
     const actors = act.querySelectorAll<HTMLElement>(
-      "[data-actor], [data-paper], [data-ornament], [data-ribbon]"
+      "[data-actor], [data-paper], [data-ornament], [data-ribbon], [data-brush], [data-bird]"
     );
     if (actors.length) gsap.set(actors, { opacity: 0 });
   });

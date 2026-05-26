@@ -340,14 +340,6 @@ em { font-style: italic; }
   -webkit-mask-image: radial-gradient(ellipse at center, #000 45%, transparent 78%);
           mask-image: radial-gradient(ellipse at center, #000 45%, transparent 78%);
 }
-.actor-brush,
-.actor-bird {
-  /* Generated on PURE WHITE bg — multiply blend keeps only the dark object,
-     a soft mask hides any residual cream paper texture at the edges */
-  mix-blend-mode: multiply;
-  -webkit-mask-image: radial-gradient(ellipse at center, #000 50%, transparent 85%);
-          mask-image: radial-gradient(ellipse at center, #000 50%, transparent 85%);
-}
 
 .actor-page {
   top: 8%;
@@ -367,19 +359,29 @@ em { font-style: italic; }
   width: clamp(18rem, 36vw, 32rem);
   transform-origin: 20% 20%;
 }
-.actor-brush {
-  top: 12%;
-  left: 50%;
-  width: clamp(20rem, 50vw, 44rem);
-  transform: translateX(-50%);
-  transform-origin: 50% 50%;
-  opacity: 0.85;
+
+/* Lezzet — calligraphic brush, vector based, draws itself via stroke-dashoffset */
+.brush-svg {
+  position: absolute;
+  top: 28%;
+  left: 0;
+  width: 100%;
+  height: clamp(8rem, 22vh, 16rem);
+  pointer-events: none;
+  will-change: transform, opacity;
+  overflow: visible;
 }
-.actor-bird {
-  top: 24%;
+.brush-svg path { will-change: stroke-dashoffset; }
+
+/* Landscape — bird silhouette with continuously flapping wings */
+.bird-svg {
+  position: absolute;
+  top: 22%;
   left: -10%;
-  width: clamp(2.5rem, 6vw, 5rem);
-  opacity: 0.7;
+  width: clamp(2.8rem, 6.5vw, 5.5rem);
+  pointer-events: none;
+  will-change: transform, opacity;
+  overflow: visible;
 }
 
 /* Atelier — a small paper card that floats in diagonally */
