@@ -1,0 +1,352 @@
+<!doctype html>
+<html lang="tr">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Betül Çeçen — grafik tasarımcı. İzmir. Kitap, ambalaj, illüstrasyon, kentsel miras." />
+    <title>Betül Çeçen — Graphic Designer</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,200..900;1,9..144,200..900&family=Inter:wght@300;400;500&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <!-- LOADER -->
+    <div class="loader" data-loader>
+      <div class="loader__inner">
+        <span class="loader__label">Betül Çeçen</span>
+        <span class="loader__count" data-loader-count>00</span>
+      </div>
+      <div class="loader__bar"><span data-loader-bar></span></div>
+    </div>
+
+    <!-- CURSOR -->
+    <div class="cursor" data-cursor></div>
+    <div class="cursor-dot" data-cursor-dot></div>
+
+    <!-- NAV -->
+    <nav class="nav" data-nav>
+      <a class="nav__brand" href="#top">
+        <span class="nav__brand-mark">●</span><span>Betül Çeçen</span>
+      </a>
+      <div class="nav__progress" data-nav-progress>
+        <span class="nav__progress-label" data-nav-label>Uyanış</span>
+        <span class="nav__progress-bar"><span data-progress-fill></span></span>
+        <span class="nav__progress-num" data-nav-num>01 / 07</span>
+      </div>
+      <a class="nav__cta" href="#contact">
+        <span>İletişim</span><span class="nav__cta-arrow">↗</span>
+      </a>
+    </nav>
+
+    <main id="top">
+      <!-- ============================================================
+           SCENES — every scene (including the opening eye) lives in ONE
+           sticky stage. Cross-fades are driven by a single master timeline,
+           so we never re-mount or re-reveal a scene that was just visible.
+           ============================================================ -->
+      <section class="scenes" data-scenes>
+        <div class="scenes__stage">
+
+      <!-- ============================================================
+           SCENE 01 — UYANIŞ (the eye)
+           Visible from the start. As you scroll, eye zooms + fades while
+           Scene 02 (atelier) opens behind it. Same cross-fade as every other
+           transition — no separate pin, no double appearance.
+           ============================================================ -->
+      <section class="act act-portal act-eye" data-act="1" data-act-name="Uyanış">
+        <div class="act-portal__stage">
+          <div class="act-portal__bg act-eye__bg" data-portal-bg>
+            <img src="/generated/eye-close-up.png" alt="" />
+            <div class="act-eye__mask"></div>
+          </div>
+
+          <div class="act-portal__content act-eye__content" data-portal-content>
+            <span class="eye__eyebrow">
+              <span class="dot"></span><span>İzmir · 2026</span>
+            </span>
+            <h1 class="eye__name">
+              <span class="line"><span data-split>Betül</span></span>
+              <span class="line"><span data-split>Çeçen</span></span>
+            </h1>
+            <p class="eye__sub">
+              Bir tasarım — açılan bir gözdür.<br />
+              Aşağı kay, içeri gir.
+            </p>
+          </div>
+
+          <div class="eye__cue" data-eye-cue>
+            <span class="eye__cue-line"></span>
+            <span>İçeri</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="act act-portal" data-act="2" data-act-name="Atölye">
+        <div class="act-portal__stage">
+          <div class="act-portal__bg" data-portal-bg>
+            <img src="/generated/atelier-dreamscape.png" alt="" />
+            <div class="act-portal__vignette"></div>
+          </div>
+
+          <!-- Atelier actors: a paper card + a hovering page illustration -->
+          <div class="scene-actors" aria-hidden="true">
+            <img class="actor-img actor-page" data-actor src="/generated/actor-page.png" alt="" />
+            <div class="paper-card" data-paper>
+              <span>Atölye / 2026</span>
+              <span>Konak — İzmir</span>
+            </div>
+          </div>
+
+          <div class="act-portal__content" data-portal-content>
+            <span class="act-portal__index">(II)</span>
+
+            <div class="atelier__words">
+              <span class="word word--1">Sessizlik</span>
+              <span class="word word--2">bir</span>
+              <span class="word word--3">boşluk</span>
+              <span class="word word--4">değil,</span>
+              <span class="word word--5">bir</span>
+              <span class="word word--6 word--accent">davettir.</span>
+            </div>
+
+            <div class="atelier__about">
+              <div class="atelier__about-col">
+                <h4>Kim</h4>
+                <p>Betül Çeçen — İzmir merkezli grafik tasarımcı ve illüstratör. 2014'ten beri kitap kapağı, ambalaj, editoryel ve kentsel miras projeleri üretiyor.</p>
+              </div>
+              <div class="atelier__about-col">
+                <h4>Birlikte</h4>
+                <p>İzmir Büyükşehir Belediyesi · İzmir Planlama Ajansı · Arketip Kitap · Doğan Kitap · Rabarba Dergi.</p>
+              </div>
+              <div class="atelier__about-col">
+                <h4>Araçlar</h4>
+                <p>Adobe Creative Suite (Photoshop, Illustrator, InDesign). Eski bir Heidelberg presi. Birkaç kalem.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================================
+           ACT 03 — İZMİRAS (HERITAGE)
+           Portal IN → Project showcase → Portal OUT
+           ============================================================ -->
+      <section class="act act-portal" data-act="3" data-act-name="İzMiras">
+        <div class="act-portal__stage">
+          <div class="act-portal__bg" data-portal-bg>
+            <img src="/generated/heritage-stone.png" alt="" />
+            <div class="act-portal__vignette"></div>
+          </div>
+
+          <!-- Heritage actors: a carved stone fragment + a vertical ornament line -->
+          <div class="scene-actors" aria-hidden="true">
+            <img class="actor-img actor-stone" data-actor src="/generated/actor-stone.png" alt="" />
+            <div class="ornament-line" data-ornament></div>
+          </div>
+
+          <div class="act-portal__content" data-portal-content>
+            <span class="act-portal__index">(III)</span>
+            <h2 class="act-portal__title">
+              <span class="line"><span data-portal-title>İzMiras</span></span>
+            </h2>
+            <p class="act-portal__sub">Kültür rotaları — taşlardan hikâyelere.</p>
+
+            <div class="project__meta">
+              <div>
+                <span class="project__label">Yıl</span>
+                <span class="project__val">2023</span>
+              </div>
+              <div>
+                <span class="project__label">Rol</span>
+                <span class="project__val">Sanat yönetimi · Editorial</span>
+              </div>
+              <div>
+                <span class="project__label">İş veren</span>
+                <span class="project__val">İzmir B.Ş.B.</span>
+              </div>
+              <div>
+                <span class="project__label">Tanınma</span>
+                <span class="project__val">1.5K ↑ Behance</span>
+              </div>
+            </div>
+
+            <p class="project__body">
+              Bir kentin yüzyıllar içinde biriktirdiği taşlar, sokak isimleri,
+              yarım kalmış cümleler. İzmir'in mirasını ziyaretçi için bir okuma
+              haritasına çevirdik — basılı kitapçık, yön levhaları, dijital katmanlar.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================================
+           ACT 04 — HİKÂYELER (BOOKS)
+           ============================================================ -->
+      <section class="act act-portal" data-act="4" data-act-name="Hikâyeler">
+        <div class="act-portal__stage">
+          <div class="act-portal__bg" data-portal-bg>
+            <img src="/generated/books-library.png" alt="" />
+            <div class="act-portal__vignette"></div>
+          </div>
+
+          <!-- Books actors: an antique book hovering + a bookmark ribbon -->
+          <div class="scene-actors" aria-hidden="true">
+            <img class="actor-img actor-book" data-actor src="/generated/actor-book.png" alt="" />
+            <div class="ribbon" data-ribbon>
+              <span class="ribbon__line"></span>
+              <span class="ribbon__tag">Hikâyeler · 04</span>
+            </div>
+          </div>
+
+          <div class="act-portal__content" data-portal-content>
+            <span class="act-portal__index">(IV)</span>
+            <h2 class="act-portal__title">
+              <span class="line"><span data-portal-title>Hikâyeler</span></span>
+            </h2>
+            <p class="act-portal__sub">Bir kapak — kitabın ilk cümlesidir.</p>
+
+            <ul class="project__list">
+              <li>
+                <span class="project__list-num">01</span>
+                <span class="project__list-name">Doğan Kitap — Türk Edebiyatı Serisi</span>
+                <span class="project__list-meta">Kapak · 2024</span>
+              </li>
+              <li>
+                <span class="project__list-num">02</span>
+                <span class="project__list-name"><em>Kinyas ve Kayra</em> — Hakan Günday</span>
+                <span class="project__list-meta">Kapak · 2020</span>
+              </li>
+              <li>
+                <span class="project__list-num">03</span>
+                <span class="project__list-name"><em>Tahta Öyküler</em> / Wood Tales</span>
+                <span class="project__list-meta">Kapak · 2019</span>
+              </li>
+              <li>
+                <span class="project__list-num">04</span>
+                <span class="project__list-name">18. GBF Afişi</span>
+                <span class="project__list-meta">Afiş · 2018</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================================
+           ACT 05 — LEZZET & ÇİZGİ (PACKAGING + ILLUSTRATION)
+           ============================================================ -->
+      <section class="act act-portal" data-act="5" data-act-name="Lezzet">
+        <div class="act-portal__stage">
+          <div class="act-portal__bg act-portal__bg--split" data-portal-bg>
+            <div class="split-bg__left">
+              <img src="/generated/chocolate-luxe.png" alt="" />
+            </div>
+            <div class="split-bg__right">
+              <img src="/generated/illustration-portrait.png" alt="" />
+            </div>
+            <div class="act-portal__vignette"></div>
+          </div>
+
+          <!-- Lezzet actors: a dramatic ink brushstroke bridges the two halves -->
+          <div class="scene-actors" aria-hidden="true">
+            <img class="actor-img actor-brush" data-actor src="/generated/actor-brush.png" alt="" />
+          </div>
+
+          <div class="act-portal__content" data-portal-content>
+            <span class="act-portal__index">(V)</span>
+            <h2 class="act-portal__title">
+              <span class="line"><span data-portal-title>Lezzet</span></span>
+              <span class="line"><span data-portal-title><em>& Çizgi</em></span></span>
+            </h2>
+            <p class="act-portal__sub">Bir parça çikolata, bir kâğıt portresi.</p>
+
+            <div class="project__duo">
+              <div class="project__duo-item">
+                <span class="project__list-num">Arnold</span>
+                <p>Bir İzmir markası için sade ambalaj sistemi — doğal mürekkep, geri dönüştürülmüş kağıt, gold foil aksanlar.</p>
+                <span class="project__list-meta">Ambalaj · 2022</span>
+              </div>
+              <div class="project__duo-item">
+                <span class="project__list-num">Rabarba — Bilet Kızı</span>
+                <p>Dijital boya tabletinde tek oturuşta çizilen editoryel illüstrasyon; Rabarba dergisinin kapağı için.</p>
+                <span class="project__list-meta">İllüstrasyon · 2021</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================================
+           ACT 06 — NEFES (LANDSCAPE)
+           Portal IN → final landscape + quote → natural exit to footer
+           ============================================================ -->
+      <section class="act act-portal act-final" data-act="6" data-act-name="Nefes">
+        <div class="act-portal__stage">
+          <div class="act-portal__bg" data-portal-bg>
+            <img src="/generated/final-landscape.png" alt="" />
+          </div>
+
+          <!-- Landscape actor: a single bird drifts across the sky -->
+          <div class="scene-actors" aria-hidden="true">
+            <img class="actor-img actor-bird" data-actor src="/generated/actor-bird.png" alt="" />
+          </div>
+
+          <div class="act-portal__content act-final__content" data-portal-content>
+            <blockquote class="act-final__quote">
+              <span class="line"><span data-portal-title>"Acele etmemek</span></span>
+              <span class="line"><span data-portal-title>bir lükstür;</span></span>
+              <span class="line"><span data-portal-title>tasarım — bu lüksün</span></span>
+              <span class="line"><span data-portal-title>günlük pratiğidir."</span></span>
+            </blockquote>
+          </div>
+        </div>
+      </section>
+
+        </div><!-- /.scenes__stage -->
+      </section><!-- /.scenes -->
+
+      <!-- ============================================================
+           CONTACT — quiet, normal scroll
+           ============================================================ -->
+      <footer id="contact" class="contact" data-act-name="İletişim">
+        <div class="contact__big">
+          <span class="line"><span data-split>Bir</span></span>
+          <span class="line"><span data-split>cümleyle</span></span>
+          <span class="line"><span data-split>başlayalım.</span></span>
+        </div>
+
+        <div class="contact__cols">
+          <div>
+            <span class="contact__label">E-posta</span>
+            <a class="contact__link" href="mailto:betuleing@gmail.com">betuleing@gmail.com</a>
+          </div>
+          <div>
+            <span class="contact__label">İzmir</span>
+            <span class="contact__addr">
+              Alsancak, 1453. Sok.<br />Konak — İzmir<br />Görüşmeler randevuludur.
+            </span>
+          </div>
+          <div>
+            <span class="contact__label">Portfolyo</span>
+            <ul class="contact__social">
+              <li><a href="https://www.behance.net/betueling" target="_blank" rel="noopener">Behance <span>↗</span></a></li>
+              <li><a href="https://tr.linkedin.com/in/bet%C3%BCl-%C3%A7e%C3%A7en-86617214b" target="_blank" rel="noopener">LinkedIn <span>↗</span></a></li>
+              <li><a href="#">Instagram <span>↗</span></a></li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="contact__bottom">
+          <span>© 2026 Betül Çeçen</span>
+          <span>Sinematik portfolyo — taslak v0.3</span>
+        </div>
+      </footer>
+    </main>
+
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

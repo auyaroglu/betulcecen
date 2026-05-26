@@ -1,0 +1,42 @@
+[
+  {
+    "name": "actor-page",
+    "prompt": "single torn page with handwritten ink notes and minimal design sketches on warm cream paper, isolated on pure deep black background, photographed top-down, soft warm side light raking across the paper revealing fine grain texture, the paper has slightly curled corners, fine art still life, no other objects, no text border, just a single sheet of paper hovering in pure void darkness",
+    "width": 1024,
+    "height": 1024,
+    "seed": 7001,
+    "steps": 8
+  },
+  {
+    "name": "actor-stone",
+    "prompt": "single small carved Anatolian stone fragment with intricate Byzantine relief detail, weathered warm limestone, isolated on pure deep black background, dramatic single warm side light from upper left revealing fine texture and shadow, antique archaeological artifact, fine art object photography, just a single stone object floating in pure void darkness, no other elements",
+    "width": 1024,
+    "height": 1024,
+    "seed": 7002,
+    "steps": 8
+  },
+  {
+    "name": "actor-book",
+    "prompt": "single antique closed leather hardcover book with gold tooled spine and ornamental cover detail, deep maroon and warm tan leather, isolated on pure deep black background, three quarter view, dramatic single warm side light revealing texture, fine art still life, just one book floating in pure void darkness, no other objects",
+    "width": 1024,
+    "height": 1024,
+    "seed": 7003,
+    "steps": 8
+  },
+  {
+    "name": "actor-brush",
+    "prompt": "single dramatic calligraphic brush stroke with rich pure black ink on pure clean white paper background, isolated, organic flowing shape with subtle ink texture, no other marks or shapes, just one expressive brush mark, photographed flat, top down, even neutral lighting, fine art minimal",
+    "width": 1024,
+    "height": 1024,
+    "seed": 7004,
+    "steps": 8
+  },
+  {
+    "name": "actor-bird",
+    "prompt": "single small bird silhouette in flight with outstretched wings, completely black dark silhouette shape, isolated on pure clean white background, simple clean shape, no detail visible just the silhouette, minimal fine art, photographed flat, no other elements",
+    "width": 1024,
+    "height": 1024,
+    "seed": 7005,
+    "steps": 8
+  }
+]
